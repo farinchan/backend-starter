@@ -28,8 +28,8 @@
 - Install [Postman](https://www.getpostman.com/)
 - Additional details in following sections
 
-- post <http://localhost:3000/api/users/register>
-- POST <http://localhost:3000/api/users/login>
+- POST <http://localhost:3000/api/user/register>
+- POST <http://localhost:3000/api/user/login>
 - GET <http://localhost:3000/api/example>
 
 ## test app with Postman (provides token)

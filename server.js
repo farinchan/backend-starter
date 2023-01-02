@@ -2,9 +2,8 @@ const express = require("express")
 const app = express()
 const dotenv = require("dotenv")
 const bodyParser = require("body-parser")
-// import auth routes
-const authRoutes = require("./routes/auth")
-const exampleRoutes = require("./routes/example")
+// import routes
+const Routes = require("./app/routes")
 
 require("./config/database/mysql")
 
@@ -13,11 +12,10 @@ dotenv.config()
 
 //middleware
 app.use(bodyParser.json());
-// app.use(express.json)
+app.use(bodyParser.urlencoded({ extended: true }))
 
-//routes middleware
-app.use("/api/user", authRoutes)
-app.use("/api/example", exampleRoutes)
+// //routes middleware
+app.use("/api", Routes)
 
 app.listen(3000, () => {
     console.log("Server is running on example http://localhost:3000");

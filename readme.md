@@ -1,4 +1,4 @@
-# User-Auth-JWT-API-MYSQL
+# Backend-Starter
 
 > Simple server app with JWT authentication that uses Mysql, Node.js, and the Express web framework 
 ## Requirements

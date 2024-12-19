@@ -19,7 +19,17 @@ const loginValidation = (reqBody) => {
     return Schema.validate({email : reqBody.email, password: reqBody.password})
 };
 
+const TodosValidation = (reqBody) => {
+    const Schema = Joi.object({
+        title: Joi.string().min(2).required(),
+        description: Joi.string().min(6).required(),
+        deadline: Joi.date().required()
+    })
+    return Schema.validate(reqBody)
+};
+
 module.exports = {
     registerValidation,
-    loginValidation
+    loginValidation,
+    TodosValidation
 }

@@ -27,4 +27,11 @@ router.post('/login', controller.auth.login);
 router.get('/profile', tokenValidate, controller.profile.index);
 router.post('/profile/update', tokenValidate, upload.single('picture'), controller.profile.update);
 
+router.get('/todos', tokenValidate, controller.todos.index);
+router.post('/todos', tokenValidate, controller.todos.store);
+router.get('/todos/:id', tokenValidate, controller.todos.show);
+router.put('/todos/:id', tokenValidate, controller.todos.update);
+router.delete('/todos/:id', tokenValidate, controller.todos.destroy);
+
+
 module.exports = router

@@ -26,7 +26,7 @@ controller.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10)
         const hashingPassword = await bcrypt.hash(password, salt)
 
-        const result = await User.create({
+        const result = await model.user.create({
             name,
             email,
             password: hashingPassword

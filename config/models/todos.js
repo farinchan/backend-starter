@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const db = require("../database/mysql");
 
-const User = db.define('users', {
+const Todo = db.define('todos', {
     // Model attributes are defined here
     id: {
         type: DataTypes.INTEGER,
@@ -9,25 +9,28 @@ const User = db.define('users', {
         autoIncrement: true,
         allowNull: false,
     },
-    name: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false,
+
     },
-    email: {
+    description: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    phone: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    picture: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    password: {
-        type: DataTypes.STRING,
+    deadline: {
+        type: DataTypes.DATE,
         allowNull: false
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'users',
+            key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
     }
 }, {
     // Other model options go here
@@ -37,4 +40,4 @@ const User = db.define('users', {
 
 // console.log(User === db.models.User); // true
 
-module.exports = User
+module.exports = Todo

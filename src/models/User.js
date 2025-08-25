@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
-const db = require("../database/mysql");
+const db = require('../config/database');
 
 const User = db.define('users', {
-    // Model attributes are defined here
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -12,10 +11,19 @@ const User = db.define('users', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [2, 100]
+        }
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
+        validate: {
+            isEmail: true,
+            notEmpty: true
+        }
     },
     phone: {
         type: DataTypes.STRING,
@@ -27,14 +35,17 @@ const User = db.define('users', {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [6, 255]
+        }
     }
 }, {
-    // Other model options go here
     freezeTableName: true,
-    timestamps: false
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
 });
 
-// console.log(User === db.models.User); // true
-
-module.exports = User
+module.exports = User;

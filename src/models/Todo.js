@@ -1,8 +1,7 @@
 const { DataTypes } = require('sequelize');
-const db = require("../database/mysql");
+const db = require('../config/database');
 
 const Todo = db.define('todos', {
-    // Model attributes are defined here
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -12,15 +11,30 @@ const Todo = db.define('todos', {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
-
+        validate: {
+            notEmpty: true,
+            len: [2, 255]
+        }
     },
     description: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+            len: [6, 1000]
+        }
     },
     deadline: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isDate: true,
+            isAfter: new Date().toISOString()
+        }
+    },
+    status: {
+        type: DataTypes.ENUM('pending', 'in_progress', 'completed'),
+        defaultValue: 'pending'
     },
     userId: {
         type: DataTypes.INTEGER,
@@ -33,11 +47,10 @@ const Todo = db.define('todos', {
         onDelete: 'CASCADE'
     }
 }, {
-    // Other model options go here
     freezeTableName: true,
-    timestamps: false
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
 });
 
-// console.log(User === db.models.User); // true
-
-module.exports = Todo
+module.exports = Todo;

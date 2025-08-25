@@ -1,92 +1,306 @@
-# Backend-Starter
+# Backend Starter - Express.js REST API
 
-> Simple server app with JWT authentication that uses Mysql, Node.js, and the Express web framework 
-## Requirements
+A professional, production-ready Express.js REST API with JWT authentication, MySQL database, and comprehensive error handling.
 
-- git
-- Node.js
-- A browser (e.g., Firefox or Chrome)
-- bash shell
-- Mysql
+## 🚀 Features
 
+- **Authentication & Authorization**: JWT-based authentication system
+- **Database**: MySQL with Sequelize ORM
+- **Security**: Helmet, CORS, Rate limiting
+- **Validation**: Request validation with Joi
+- **File Upload**: Multer for handling file uploads
+- **Error Handling**: Centralized error handling
+- **Logging**: Morgan for HTTP request logging
+- **Testing**: Jest testing framework
+- **Code Structure**: Clean architecture with services, controllers, middleware
 
-## How To Start
-- rename the .env.example file to .env
-- add mysql database information
-- paste your cluster connection string to DB_CONNECTION in .env
-- add TOKEN_SECRET for JWT
-- Install dependencies with `npm install`
-- Run the server locally with `npm start` or `npm run dev`
+## 📁 Project Structure
 
+```
+src/
+├── config/          # Database and application configuration
+├── controllers/     # Request handlers
+├── middleware/      # Custom middleware functions
+├── models/         # Database models (Sequelize)
+├── routes/         # API routes
+├── services/       # Business logic layer
+├── utils/          # Utility functions and helpers
+├── app.js          # Express application setup
+└── server.js       # Server entry point
 
-## View local app in browser
+public/
+└── uploads/        # File upload directory
 
-- <http://localhost:3000>
+tests/              # Test files
+```
 
-## Test requests with Postman
+## 🛠️ Installation
 
-- Install [Postman](https://www.getpostman.com/)
-- Additional details in following sections
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd whatsapp-gateway-backend
+   ```
 
-- POST <http://localhost:3000/api/user/register>
-- POST <http://localhost:3000/api/user/login>
-- GET <http://localhost:3000/api/example>
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## test app with Postman (provides token)
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Update the `.env` file with your configuration:
+   ```env
+   PORT=3001
+   NODE_ENV=development
+   
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_NAME=backend_starter
+   DB_USERNAME=root
+   DB_PASSWORD=your_password
+   
+   TOKEN_SECRET=your_jwt_secret_key
+   ```
 
-1. POST <http://localhost:3000/api/users/register> - set Body / Raw / JSON - Send
+4. **Database Setup**
+   - Create a MySQL database named `backend_starter`
+   - The application will automatically sync the database schema
 
-```JSON
+5. **Start the application**
+   ```bash
+   # Development
+   npm run dev
+   
+   # Production
+   npm start
+   ```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+
+#### Register User
+```http
+POST /api/auth/register
+Content-Type: application/json
+
 {
-  "name": "fajri",
-  "email": "fajri@farindev.my.id",
-  "password": "123456789"
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
 }
 ```
 
-Should return something like:
+#### Login User
+```http
+POST /api/auth/login
+Content-Type: application/json
 
-```JSON
 {
-    "name": "fajri",
-    "email": "fajri@farindev.my.id",
-    "password": "$2a$10$hQN7uKIcuu2fXTet2nxPSe3jXD7GtSglsX/2JZM3Wxz31JWk8mTTS",
-    "_id": "6288838ce9afa35b2f1537b1",
-    "created_at": "2022-05-21T06:15:40.958Z",
-    "__v": 0
+  "email": "john@example.com",
+  "password": "password123"
 }
 ```
 
-2. POST <http://localhost:3000/api/users/login> - set Body / Raw / JSON - Send
+#### Refresh Token
+```http
+POST /api/auth/refresh
+Authorization: Bearer <token>
+```
 
-```JSON
+### User Endpoints
+
+#### Get Profile
+```http
+GET /api/users/profile
+Authorization: Bearer <token>
+```
+
+#### Update Profile
+```http
+PUT /api/users/profile
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
 {
-  "email": "fajri@farindev.my.id",
-  "password": "123456789"
+  "name": "John Updated",
+  "email": "john.updated@example.com",
+  "phone": "1234567890",
+  "picture": <file>
 }
 ```
 
-Should return something like:
+### Todo Endpoints
 
-```JSON
+#### Get All Todos
+```http
+GET /api/todos?page=1&limit=10&status=pending
+Authorization: Bearer <token>
+```
+
+#### Create Todo
+```http
+POST /api/todos
+Authorization: Bearer <token>
+Content-Type: application/json
+
 {
-    "messsage": "loggedd In ",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mjg4ODM4Y2U5YWZhMzViMmYxNTM3YjEiLCJpYXQiOjE2NTMxMTM3OTR9.7wdHLeDIxzJCm7ZyOWJSlk1b1HPp2Y4cxIVNzcnjf5g",
-    "name": "fajri",
-    "email": "fajri@farindev.my.id"
+  "title": "Complete project",
+  "description": "Finish the backend API development",
+  "deadline": "2024-12-31T23:59:59.000Z",
+  "status": "pending"
 }
 ```
 
-3. GET <http://localhost:3000/api/example>
-set Headers `auth-token : <YOUR_TOKEN>`
-example `auth-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Mjg4ODM4Y2U5YWZhMzViMmYxNTM3YjEiLCJpYXQiOjE2NTMxMTM3OTR9.7wdHLeDIxzJCm7ZyOWJSlk1b1HPp2Y4cxIVNzcnjf5g`
+#### Get Todo by ID
+```http
+GET /api/todos/:id
+Authorization: Bearer <token>
+```
 
+#### Update Todo
+```http
+PUT /api/todos/:id
+Authorization: Bearer <token>
+Content-Type: application/json
 
-response:
-
-```JSON
 {
-    "title": "Example Title",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel libero turpis. Suspendisse venenatis, nunc nec aliquam mollis, mi libero aliquam nunc, ut condimentum odio metus id nisi. Sed ac ex placerat, egestas dui vel, fermentum leo. Fusce sed velit at enim tempus vehicula. Nulla maximus sit amet turpis id aliquam. Donec ut arcu hendrerit, convallis augue et, laoreet tortor. Proin interdum magna consectetur lacinia posuere. Sed erat nunc, laoreet sed justo id, dapibus imperdiet elit. Vestibulum sit amet ornare ipsum. Sed cursus metus non nisl euismod, eget mollis metus blandit. Nulla facilisi. "
+  "title": "Updated title",
+  "status": "completed"
 }
 ```
+
+#### Delete Todo
+```http
+DELETE /api/todos/:id
+Authorization: Bearer <token>
+```
+
+#### Get Todo Statistics
+```http
+GET /api/todos/stats
+Authorization: Bearer <token>
+```
+
+### Example Endpoints
+
+#### Health Check
+```http
+GET /api/example/health
+```
+
+#### Test Endpoint
+```http
+GET /api/example/test
+Authorization: Bearer <token>
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## 🔧 Development
+
+### Code Style
+- Use ES6+ features
+- Follow consistent naming conventions
+- Write descriptive commit messages
+- Add JSDoc comments for functions
+
+### Database Migrations
+```bash
+# Generate migration
+npx sequelize-cli migration:generate --name migration-name
+
+# Run migrations
+npx sequelize-cli db:migrate
+
+# Undo last migration
+npx sequelize-cli db:migrate:undo
+```
+
+## 🚀 Deployment
+
+### Environment Variables for Production
+```env
+NODE_ENV=production
+PORT=3001
+DB_HOST=your_production_db_host
+DB_NAME=your_production_db_name
+DB_USERNAME=your_production_db_user
+DB_PASSWORD=your_production_db_password
+TOKEN_SECRET=your_strong_jwt_secret
+CORS_ORIGIN=https://yourdomain.com
+```
+
+### PM2 (Recommended for production)
+```bash
+# Install PM2
+npm install -g pm2
+
+# Start application
+pm2 start src/server.js --name "backend-api"
+
+# Monitor
+pm2 monit
+
+# Logs
+pm2 logs backend-api
+```
+
+## 📝 Error Handling
+
+The API uses consistent error response format:
+
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 🔐 Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **Password Hashing**: bcrypt with salt rounds
+- **Rate Limiting**: Prevents API abuse
+- **CORS**: Configurable cross-origin resource sharing
+- **Helmet**: Security headers
+- **Input Validation**: Joi schema validation
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 👥 Authors
+
+- **Fajri Rinaldi Chan** - *Initial work*
+
+## 🙏 Acknowledgments
+
+- Express.js community
+- Sequelize documentation
+- JWT.io for token handling
+- All contributors and testers
